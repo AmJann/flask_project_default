@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1>To-Do List</h1>
+{% endblock %}
+
+{% block body %}
+<div>Add a new To-do item:
+    <form action="/add" method="POST">
+        <input type="text" name="item">
+        <input type="date" name="date_due">
+        <input type="submit">
+    </form>
+</div>
+<div>
+    <ul>
+        {% for todo in todos %}
+        <li><input type="checkbox">{{ todo.text }}</li>
+        {% endfor %}
+    </ul>
+</div>    
+{% endblock %}
