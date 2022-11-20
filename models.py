@@ -32,10 +32,11 @@ class User(db.Model):
 class ToDo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
-    text = db.Column(db.String(255))
+    title = db.Column(db.String(50))
+    description = db.Column(db.String(500))
     date_due = db.Column(db.Date())
     in_progress = db.Column(db.Boolean, default=False)
-    complete = db.Column(db.Boolean)
+    complete = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     def __repr__(self):

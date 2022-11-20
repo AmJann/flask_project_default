@@ -32,7 +32,7 @@ def add():
     datetime_obj = datetime.strptime(datetime_str,
     "%Y-%m-%d")
     date = datetime_obj.date()
-    todo = ToDo(text=request.form['item'], complete=False, date_due =date )
+    todo = ToDo(title=request.form['title'], complete=False, date_due =date, description=request.form['description'] )
     db.session.add(todo)
     db.session.commit()
     return redirect(url_for('index'))

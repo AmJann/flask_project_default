@@ -7,16 +7,42 @@
 {% block body %}
 <div>Add a new To-do item:
     <form action="/add" method="POST">
-        <input type="text" name="item">
+        <input type="text" name="title" placeholder = "Task Title">
         <input type="date" name="date">
+        <input type="text" name ="description" placeholder ="Description">
         <input type="submit">
     </form>
 </div>
 <div>
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Date Due</th>
+            <th>Progress</th>
+            <th></th>
+        </tr>
+        {% for todo in todos %}
+        <tr>
+            <td>
+                {{ todo.title }}
+            </td>
+            <td>
+                {{ todo.date_due}}
+            </td>
+            <td>
+                <a href="">Update</a>
+                <br>
+                <a href="">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+<!-- <div>
     <ul>
         {% for todo in todos %}
         <li><input type="checkbox">{{ todo.text }}<span>{{ todo.date_due}}</span><a href ="#">Mark as Complete</a></li>
         {% endfor %}
     </ul>
 </div>    
-{% endblock %}
+{% endblock %} -->
