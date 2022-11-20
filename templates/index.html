@@ -24,11 +24,17 @@
         {% for todo in todos %}
         <tr>
             <td>
-                {{ todo.title }}
+                <a href = "/show/<int:id>">{{ todo.title }}</a>
             </td>
             <td>
-                {{ todo.date_due}}
+                {{ todo.date_due }}
             </td>
+            <td>
+               {% if todo.complete == False %}
+               <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
+               {% endif %}
+            </td>
+
             <td>
                 <a href="">Update</a>
                 <br>

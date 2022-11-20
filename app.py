@@ -32,10 +32,18 @@ def add():
     datetime_obj = datetime.strptime(datetime_str,
     "%Y-%m-%d")
     date = datetime_obj.date()
-    todo = ToDo(title=request.form['title'], complete=False, date_due =date, description=request.form['description'] )
+    todo = ToDo(title=request.form['title'], complete=False, date_due =date, description=request.form['description'], in_progress=False )
     db.session.add(todo)
     db.session.commit()
     return redirect(url_for('index'))
+
+@app.route("/show/<int:id>", methods=['GET'])
+def show(id):
+    todo = ToDo.query.filter_by(todo_id=id).first()
+    print(id)
+
+    return render_template('show.html', todo = todo)
+     
 
 if __name__ == "__main__":
     app.run(port=3000)

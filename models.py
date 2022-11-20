@@ -31,7 +31,7 @@ class User(db.Model):
 
 class ToDo(db.Model):
     __tablename__ = 'todos'
-    id = db.Column(db.Integer, primary_key=True)
+    todo_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50))
     description = db.Column(db.String(500))
     date_due = db.Column(db.Date())
