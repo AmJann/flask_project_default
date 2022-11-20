@@ -8,14 +8,14 @@
 <div>Add a new To-do item:
     <form action="/add" method="POST">
         <input type="text" name="item">
-        <input type="date" name="date_due">
+        <input type="date" name="date">
         <input type="submit">
     </form>
 </div>
 <div>
     <ul>
         {% for todo in todos %}
-        <li><input type="checkbox">{{ todo.text }}</li>
+        <li><input type="checkbox">{{ todo.text }}<span>{{ todo.date_due}}</span><a href ="#">Mark as Complete</a></li>
         {% endfor %}
     </ul>
 </div>    

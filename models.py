@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -33,7 +33,7 @@ class ToDo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(255))
-    date_due = db.Column(db.DateTime)
+    date_due = db.Column(db.Date())
     in_progress = db.Column(db.Boolean, default=False)
     complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))

@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, render_template, request
 from models import db, User, ToDo
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 
 # Flask
@@ -27,7 +28,11 @@ def index():
 
 @app.route("/add", methods=['POST'])
 def add():
-    todo = ToDo(text=request.form['item'], complete=False)
+    datetime_str = request.form['date']
+    datetime_obj = datetime.strptime(datetime_str,
+    "%Y-%m-%d")
+    date = datetime_obj.date()
+    todo = ToDo(text=request.form['item'], complete=False, date_due =date )
     db.session.add(todo)
     db.session.commit()
     return redirect(url_for('index'))
