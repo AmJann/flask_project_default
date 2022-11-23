@@ -7,9 +7,14 @@
 {% block body %}
 <div>Add a new To-do item:
     <form action="/add" method="POST">
+        <label for="title">Task Title:</label>
         <input type="text" name="title" placeholder = "Task Title">
+        <br>
+        <label for="date">Date Due:</label>
         <input type="date" name="date">
-        <input type="text" name ="description" placeholder ="Description">
+        <br><br>
+        <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
+        <br>
         <input type="submit">
     </form>
 </div>
@@ -49,7 +54,7 @@
             <td>
                 <a href="{{url_for('update', id=todo.todo_id)}}">Edit</a>
                 <br>
-                <a href="">Delete</a>
+                <a href="{{url_for('delete', id=todo.todo_id)}}">Delete</a>
             </td>
             <td>
                 <a href="{{url_for('complete', id=todo.todo_id)}}">

@@ -45,17 +45,38 @@ def show(id):
 @app.route("/update/<int:id>/", methods=['GET','POST'])  
 def update(id):  
     if request.method == 'POST':
-        todo = ToDo.query.filter_by(todo_id = id).first()
-        datetime_str = request.form['date']
-        datetime_obj = datetime.strptime(datetime_str,
-        "%Y-%m-%d")
-        date = datetime_obj.date()
-        todo = ToDo(title=request.form['title'], date_due =date, description=request.form['description'])
+        todo = ToDo.query.get_or_404(id)
+        todo.title =request.form['title']
+        todo.description = request.form['description']
+        todo.date_due = request.form['date']
         db.session.commit()
         return redirect(url_for('index'))
     elif request.method == 'GET':
-        todo = ToDo.query.filter_by(todo_id = id).first()  
+        todo = ToDo.query.filter_by(todo_id = id).first() 
         return render_template('update.html', todo = todo)
+
+# @app.route("/submit_update/<int:id>/", methods=['GET','POST'])  
+# def submit_update(id):  
+#     if request.method == 'GET':
+#         todo = ToDo.query.filter_by(todo_id = id).first()
+#         datetime_str = request.form['date']
+#         datetime_obj = datetime.strptime(datetime_str,
+#         "%Y-%m-%d")
+#         date = datetime_obj.date()
+#         todo = ToDo(title=request.form['title'], date_due =date, description=request.form['description'])
+#         db.session.commit()
+#         return redirect(url_for('index'))     
+
+@app.route('/delete/<int:id>')
+def delete(id):
+    task_delete = ToDo.query.get_or_404(id)
+
+    try:
+        db.session.delete(task_delete)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return'issue deleting the task'
 
 @app.route("/progress/<int:id>/", methods=['GET'])    
 def progress(id):
