@@ -37,13 +37,40 @@ def add():
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route("/show/<int:id>", methods=['GET'])
+@app.route("/show/<int:id>/", methods=['GET'])
 def show(id):
-    todo = ToDo.query.filter_by(todo_id=id).first()
-    print(id)
-
+    todo = ToDo.query.filter_by(todo_id = id).first()
     return render_template('show.html', todo = todo)
-     
+
+@app.route("/update/<int:id>/", methods=['GET','POST'])  
+def update(id):  
+    if request.method == 'POST':
+        todo = ToDo.query.filter_by(todo_id = id).first()
+        datetime_str = request.form['date']
+        datetime_obj = datetime.strptime(datetime_str,
+        "%Y-%m-%d")
+        date = datetime_obj.date()
+        todo = ToDo(title=request.form['title'], date_due =date, description=request.form['description'])
+        db.session.commit()
+        return redirect(url_for('index'))
+    elif request.method == 'GET':
+        todo = ToDo.query.filter_by(todo_id = id).first()  
+        return render_template('update.html', todo = todo)
+
+@app.route("/progress/<int:id>/", methods=['GET'])    
+def progress(id):
+    todo = ToDo.query.filter_by(todo_id = id).first()
+    todo.in_progress = not todo.in_progress
+    db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route("/complete/<int:id>/", methods=['GET'])    
+def complete(id):
+    todo = ToDo.query.filter_by(todo_id = id).first()
+    todo.in_progress = True
+    todo.complete = not todo.complete
+    db.session.commit()
+    return redirect(url_for('index'))     
 
 if __name__ == "__main__":
     app.run(port=3000)

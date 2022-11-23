@@ -1,0 +1,14 @@
+{% block head %}
+<h2>Edit Task: {{todo.title}}</h2>
+{% endblock %}
+
+{% block body %}
+<form>
+    <form action="/update/<int:id>/" method="POST">
+        <input type="text" name="title" placeholder = "Task Title" value = {{todo.title}}' maxlength="50" size="25">
+        <input type="date" name="date">
+        <input type="text" name ="description" placeholder ="Description">
+        <input type="submit" value = "update">
+    </form>
+</form>
+{% endblock %}

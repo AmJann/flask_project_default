@@ -24,21 +24,41 @@
         {% for todo in todos %}
         <tr>
             <td>
-                <a href = "/show/<int:id>">{{ todo.title }}</a>
+                <a href = "{{url_for('show', id=todo.todo_id)}}">{{ todo.title }}</a>
             </td>
             <td>
                 {{ todo.date_due }}
             </td>
+            
+                <td>
+                    {% if todo.complete == true %}
+                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                            <img src ="{{url_for('static', filename = 'images/complete.png')}}">
+                        </a>
+                    {% elif todo.complete == false and todo.in_progress == false  %}
+                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                            <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
+                        </a>    
+                    {% elif todo.complete == false and todo.in_progress == true  %}
+                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                            <img src ="{{url_for('static', filename = 'images/in_progress.png')}}">
+                        </a>    
+                    {% endif %}
+                </td>
+            </a>
             <td>
-               {% if todo.complete == False %}
-               <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
-               {% endif %}
-            </td>
-
-            <td>
-                <a href="">Update</a>
+                <a href="{{url_for('update', id=todo.todo_id)}}">Edit</a>
                 <br>
                 <a href="">Delete</a>
+            </td>
+            <td>
+                <a href="{{url_for('complete', id=todo.todo_id)}}">
+                    {% if todo.complete == true %}
+                    <span>Mark as incomplete</span>
+                    {% elif todo.complete == false %}
+                    <span>Mark as complete</span>
+                    {% endif %}
+                </a>
             </td>
         </tr>
         {% endfor %}
@@ -50,5 +70,5 @@
         <li><input type="checkbox">{{ todo.text }}<span>{{ todo.date_due}}</span><a href ="#">Mark as Complete</a></li>
         {% endfor %}
     </ul>
-</div>    
-{% endblock %} -->
+</div>     -->
+{% endblock %}
