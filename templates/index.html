@@ -6,7 +6,14 @@
 
 {% block body %}
 <div>Add a new To-do item:
-    <form action="/add" method="POST">
+    <button id="openModal">Add Task</button>
+</div>
+
+<div id="modal">
+    <div id="modal-textbox">
+      <a href="#" id="close">close</a>
+
+      <form action="/add" method="POST">
         <label for="title">Task Title:</label>
         <input type="text" name="title" placeholder = "Task Title">
         <br>
@@ -15,10 +22,22 @@
         <br><br>
         <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
         <br>
-        <input type="submit">
+        <input type="submit" id ="close">
     </form>
-</div>
+    </div>
+  </div>
+
+<div class="dropdown">
+<form action="/filter_complete/<string:key>/" method="GET">
+    <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
+      <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete', key='A-Z') }}">incomplete first</option>
+      <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete', key='Z-A') }}">complete first</option>
+    </select>
+    <input type = "submit">
+</form>    
+  </div>
 <div>
+
     <table>
         <tr>
             <th>Task</th>

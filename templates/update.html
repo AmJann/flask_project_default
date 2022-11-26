@@ -3,13 +3,13 @@
 {% endblock %}
 
 {% block body %}
-<form>
-    <form action="/update/<int:id>/" method="POST" autocomplete="on">
-        <input type="text" name="title" placeholder = "Task Title" value="{{todo.title}}" maxlength="50" size="24">
-        <input type="date" name="date" value="{{todo.date_due}}"><br><br>
-        <textarea type="text" name ="description" value="{{todo.description}}" placeholder ="Description" rows ="10" columns ="40">{{todo.description}}</textarea>
+
+    <form action="/update/{{todo.todo_id}}/" method="POST" >
+        <input type="text" name="title" id="title" placeholder = "Task Title" value="{{todo.title}}" maxlength="50" size="24">
+        <input type="date" name="date" id="date" value="{{todo.date_due}}"><br><br>
+        <textarea type="text" name ="description" id="description" value="{{todo.description}}" placeholder ="Description" rows ="10" columns ="40">{{todo.description}}</textarea>
         <br>
         <input type="submit" value = "update">
     </form>
-</form>
+
 {% endblock %}
