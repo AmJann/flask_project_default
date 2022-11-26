@@ -1,42 +1,47 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<h1>To-Do List</h1>
+<div class ="typewriter">
+    <h1 id="header">To-Do List</h1>
+</div>
 {% endblock %}
 
 {% block body %}
-<div>Add a new To-do item:
-    <button id="openModal">Add Task</button>
-</div>
-
-<div id="modal">
-    <div id="modal-textbox">
-      <a href="#" id="close">close</a>
-
-      <form action="/add" method="POST">
-        <label for="title">Task Title:</label>
-        <input type="text" name="title" placeholder = "Task Title">
-        <br>
-        <label for="date">Date Due:</label>
-        <input type="date" name="date">
-        <br><br>
-        <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
-        <br>
-        <input type="submit" id ="close">
-    </form>
+<div id="contentContainer">
+<div >
+    <div>Add a new To-do item:
+        <button id="openModal">Add Task</button>
     </div>
-  </div>
 
-<div class="dropdown">
-<form action="/filter_complete/<string:key>/" method="GET">
-    <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
-      <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete', key='A-Z') }}">incomplete first</option>
-      <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete', key='Z-A') }}">complete first</option>
-    </select>
-    <input type = "submit">
-</form>    
-  </div>
-<div>
+    <div id="modal">
+        <div id="modal-textbox">
+        <a href="#" id="close">close</a>
+
+        <form action="/add" method="POST">
+            <label for="title">Task Title:</label>
+            <input type="text" name="title" placeholder = "Task Title">
+            <br>
+            <label for="date">Date Due:</label>
+            <input type="date" name="date">
+            <br><br>
+            <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
+            <br>
+            <input type="submit" id ="close">
+        </form>
+        </div>
+    </div>
+
+    <div class="dropdown">
+        <form action="/filter_complete/" method="GET">
+            <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete') }}">incomplete first</option>
+            <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete') }}">complete first</option>
+            </select>
+            <input class ="submit"type = "submit">
+        </form>    
+    </div>
+</div>
+<div id ="tableContainer">
 
     <table>
         <tr>
@@ -71,11 +76,12 @@
                 </td>
             </a>
             <td>
-                <a href="{{url_for('update', id=todo.todo_id)}}">Edit</a>
-                <br>
-                <a href="{{url_for('delete', id=todo.todo_id)}}">Delete</a>
+                <a href="{{url_for('update', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/edit.png')}}"></div></a>
             </td>
             <td>
+                <a href="{{url_for('delete', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/delete.png')}}"></div></a>
+            </td>
+            <td id = "complete">
                 <a href="{{url_for('complete', id=todo.todo_id)}}">
                     {% if todo.complete == true %}
                     <span>Mark as incomplete</span>
@@ -87,6 +93,7 @@
         </tr>
         {% endfor %}
     </table>
+</div>
 </div>
 <!-- <div>
     <ul>

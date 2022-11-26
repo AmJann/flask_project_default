@@ -12,3 +12,4 @@ const closeModal = () => {
 };
 
 close.addEventListener("click", closeModal);
+

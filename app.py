@@ -60,39 +60,7 @@ def update(id):
             return "There was a problem updating your task."  
     else:
         return render_template('update.html', todo=todo)          
-
-    # todo = ToDo.query.filter_by(todo_id = id).first() 
-    # print(todo.title)
-
-    # if request.method == 'POST':
-    #     todo.title = request.form.get['title']
-    #     todo.description = request.form.get['description']
-    #     datetime_str = request.form.get['date']
-    #     datetime_obj = datetime.strptime(datetime_str,
-    #     "%Y-%m-%d")
-    #     date = datetime_obj.date()
-    #     todo.date_due = date
-    #     todo.complete = todo.complete
-    #     todo.in_progress = todo.in_progress
-
-    #     db.session.commit()
-    #     return redirect('/')
-
-    # else:
-    #     todo = ToDo.query.filter_by(todo_id = id).first() 
-    #     return render_template('update.html', todo = todo)
-
-# @app.route("/submit_update/<int:id>/", methods=['GET','POST'])  
-# def submit_update(id):  
-#     if request.method == 'GET':
-#         todo = ToDo.query.filter_by(todo_id = id).first()
-#         datetime_str = request.form['date']
-#         datetime_obj = datetime.strptime(datetime_str,
-#         "%Y-%m-%d")
-#         date = datetime_obj.date()
-#         todo = ToDo(title=request.form['title'], date_due =date, description=request.form['description'])
-#         db.session.commit()
-#         return redirect(url_for('index'))    
+  
 @app.route("/updated/<int:id>/", methods=['POST', 'GET'])  
 def updated(id): 
     todo = ToDo.query.get_or_404(id)
@@ -118,6 +86,10 @@ def delete(id):
     except:
         return'issue deleting the task'
 
+@app.route('/user/<username>') 
+def user(username):
+    return "<h1>Hello {username}</h1>".format(username)     
+
 @app.route("/progress/<int:id>/", methods=['GET'])    
 def progress(id):
     todo = ToDo.query.filter_by(todo_id = id).first()
@@ -131,22 +103,25 @@ def complete(id):
     todo.in_progress = True
     todo.complete = not todo.complete
     db.session.commit()
-    return redirect(url_for('index'))  
+    return redirect(url_for('index'))
 
-@app.route('/filter_complete/<string:key>/', methods=['GET']) 
-def filter_complete(key):
-    todos = ToDo.query.order_by(ToDo.complete.asc()).all() 
+
+@app.route('/filter_complete/', methods=['GET']) 
+def filter_complete():
+    todos = ToDo.query.order_by(ToDo.complete.asc()).order_by(ToDo.in_progress.asc()).all() 
     # filter_rule = request.args.get('filter') 
-    if key == 'A-Z':
-        todos = ToDo.query.order_by(ToDo.complete.desc()).all()
-    return render_template('index.html', todos = todos)
+    # if key == 'A-Z':
+    #     todos = ToDo.query.order_by(ToDo.complete.desc()).all()
+    return render_template('index.html', todos=todos)   
 
-@app.route('/sort/', methods=['GET'])    
-def sort():
-    todos =ToDo.query.all()
-    todos.sorted()
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
-    return render_template('index', todos=todos)    
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500    
+    
 
 if __name__ == "__main__":
     app.run(port=3000)
