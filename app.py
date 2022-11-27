@@ -1,12 +1,16 @@
-from flask import Flask, redirect, url_for, render_template, request
+from flask import Flask, redirect, url_for, render_template, request, flash
 from models import db, User, ToDo
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired
 
 
 # Flask
 app = Flask(__name__)
-app.config['SECRET_KEY'] = '\x14B~^\x07\xe1\x197\xda\x18\xa6[[\x05\x03QVg\xce%\xb2<\x80\xa4\x00'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DEBUG'] = True
 
 # Database
@@ -112,7 +116,40 @@ def filter_complete():
     # filter_rule = request.args.get('filter') 
     # if key == 'A-Z':
     #     todos = ToDo.query.order_by(ToDo.complete.desc()).all()
-    return render_template('index.html', todos=todos)   
+    return render_template('index.html', todos=todos)  
+
+class RegistrationForm(FlaskForm):
+    username=StringField("Username",validators=[DataRequired()])
+    password=StringField("Password",validators=[DataRequired()])
+    submit=SubmitField("Submit")
+
+@app.route('/registration/', methods=['GET', 'POST'])
+def registration():
+    username = None
+    password = None
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        username =form.username.data
+        password =form.password.data
+        if form.validate_on_submit():
+            user = User.query.filter_by(username=form.username.data, password=form.password.data).first()
+              
+            if user is None:
+                user = User(username=form.username.data, password=form.password.data)
+                db.session.add(user)
+                db.session.commit()
+            username = form.username.data
+            form.username.data = ''
+            form.password.data = ''
+            flash("Sign-up Successful")
+         
+    our_users = User.query.all()
+    return render_template('registration.html',
+    username=username,
+    password=password,
+    form=form,
+    our_users=our_users
+    )   
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -120,7 +157,9 @@ def page_not_found(e):
 
 @app.errorhandler(500)
 def page_not_found(e):
-    return render_template('500.html'), 500    
+    return render_template('500.html'), 500 
+
+
     
 
 if __name__ == "__main__":
