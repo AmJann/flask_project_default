@@ -10,10 +10,9 @@
 <br><br>
 
 
-{% if username %}
-<h2> Welcome {{username}}!</h2>
-{% else %}
-<h1>Create Login</h1>
+
+<h1>Login</h1>
+
 <br>
 <form method="POST">
     {{form.hidden_tag()}}
@@ -21,13 +20,9 @@
     <br>
     {{form.username()}}
     <br><br>
-    {{form.password_hash.label}}
+    {{form.password.label}}
     <br>
-    {{form.password_hash()}}
-    <br><br>
-    {{form.password_hash2.label}}
-    <br>
-    {{form.password_hash2()}}
+    {{form.password()}}
     <br><br>
     {{form.submit()}}
 
@@ -35,7 +30,7 @@
 
 
 
-{% endif %}
+
 <br><br><br>
 {% for our_user in our_users %}
    {{our_user.id}} - {{our_user.username}}<br>

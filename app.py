@@ -1,11 +1,13 @@
-from flask import Flask, redirect, url_for, render_template, request, flash
+from flask import Flask, redirect, url_for, render_template, request, flash, session
 from models import db, User, ToDo
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
+from wtforms.validators import DataRequired, EqualTo, Length
+from werkzeug.security import generate_password_hash,check_password_hash
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 
 # Flask
@@ -20,6 +22,13 @@ app.config['DEBUG'] = True
 db.init_app(app)
 
 # db.create_all()
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+	return User.query.get(int(user_id))
 
 
 @app.route("/", methods=['POST', 'GET'])
@@ -120,36 +129,104 @@ def filter_complete():
 
 class RegistrationForm(FlaskForm):
     username=StringField("Username",validators=[DataRequired()])
-    password=StringField("Password",validators=[DataRequired()])
+    password_hash=PasswordField("Password",validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
+    password_hash2=PasswordField("Confirm Password",validators=[DataRequired()])
     submit=SubmitField("Submit")
 
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
     username = None
-    password = None
+    password_hash = None
     form = RegistrationForm()
     if form.validate_on_submit():
         username =form.username.data
-        password =form.password.data
+        password_hash =form.password_hash.data
         if form.validate_on_submit():
-            user = User.query.filter_by(username=form.username.data, password=form.password.data).first()
+            user = User.query.filter_by(username=form.username.data, password_hash=form.password_hash.data).first()
               
             if user is None:
-                user = User(username=form.username.data, password=form.password.data)
+                hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
+                user = User(username=form.username.data, password_hash=hashed_pw)
                 db.session.add(user)
                 db.session.commit()
             username = form.username.data
             form.username.data = ''
-            form.password.data = ''
+            form.password_hash.data = ''
             flash("Sign-up Successful")
          
     our_users = User.query.all()
     return render_template('registration.html',
     username=username,
-    password=password,
+    password_hash=password_hash,
     form=form,
     our_users=our_users
     )   
+class PasswordForm(FlaskForm):
+    username=StringField("Username",validators=[DataRequired()])
+    password_hash=PasswordField("Password",validators=[DataRequired()])
+    submit=SubmitField("Submit")
+
+class LoginForm(FlaskForm):
+    username =StringField("Username",validators=[DataRequired()])
+    password =PasswordField("Password",validators=[DataRequired()])
+    submit =SubmitField("Submit")  
+
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+	form = LoginForm()
+	if form.validate_on_submit():
+		user = User.query.filter_by(username=form.username.data).first()
+		if user:
+			# Check the hash
+			if check_password_hash(user.password_hash, form.password.data):
+				login_user(user)
+				flash("Login Succesfull!!")
+				return redirect(url_for('dashboard'))        
+			else:
+				flash("Wrong Password - Try Again!")
+		else:
+			flash("That User Doesn't Exist! Try Again...")
+
+
+	return render_template('login.html', form=form) 
+
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    flash("You are Logged Out.")
+    return redirect(url_for('login'))
+
+@app.route('/dashboard/', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')       
+
+@app.route('/test_pw/', methods=['GET','POST'])
+def test_pw():
+    username = None
+    password = None
+    pw_to_check = None
+    passed = None
+    form = PasswordForm()
+
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password_hash.data
+        form.username.data = ''
+        form.password_hash.data = ''
+
+        pw_to_check = User.query.filter_by(username=username).first()
+        passed =check_password_hash(pw_to_check.password_hash, password)
+
+    return render_template("test_pw.html",
+        username = username,
+        password = password,
+        pw_to_check=pw_to_check,
+        passed=passed,
+        form = form
+        )
+
 
 @app.errorhandler(404)
 def page_not_found(e):

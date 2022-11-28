@@ -2,13 +2,6 @@
 
 {% block head %}
 
-<nav>
-    <ul>
-        <li>
-            <a href="/registration/" class ="nav">Register</a>
-        </li>
-    </ul>
-</nav>
 <div class ="typewriter">
     <h1 id="header">To-Do List</h1>
 </div>
@@ -17,92 +10,92 @@
 
 {% block body %}
 <div id="contentContainer">
-<div >
-    <div>Add a new To-do item:
-        <button id="openModal">Add Task</button>
-    </div>
+    <div>
+        <div class = "textBackground">Add a new To-do item:
+            <button class = 'btn btn-outline-dark' id="openModal">Add Task</button>
+        </div>
 
-    <div id="modal">
-        <div id="modal-textbox">
-        <a href="#" id="close">close</a>
+        <div id="modal">
+            <div id="modal-textbox">
+                <a href="#" id="close" class = "btn-close"></a>
 
-        <form action="/add" method="POST">
-            <label for="title">Task Title:</label>
-            <input type="text" name="title" placeholder = "Task Title">
-            <br>
-            <label for="date">Date Due:</label>
-            <input type="date" name="date">
-            <br><br>
-            <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
-            <br>
-            <input type="submit" id ="close">
-        </form>
+                <form action="/add" method="POST">
+                    <label for="title">Task Title:</label>
+                    <input type="text" name="title" placeholder = "Task Title">
+                    <br>
+                    <label for="date">Date Due:</label>
+                    <input type="date" name="date">
+                    <br><br>
+                    <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
+                    <br>
+                    <input class = "btn btn-outline-dark"type="submit" id ="close">
+                </form>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <form action="/filter_complete/" method="GET">
+                <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete') }}">incomplete first</option>
+                <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete') }}">complete first</option>
+                </select>
+                <input class ="btn btn-outline-dark submit"type = "submit">
+            </form>    
         </div>
     </div>
+    <div id ="tableContainer">
 
-    <div class="dropdown">
-        <form action="/filter_complete/" method="GET">
-            <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
-            <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete') }}">incomplete first</option>
-            <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete') }}">complete first</option>
-            </select>
-            <input class ="submit"type = "submit">
-        </form>    
-    </div>
-</div>
-<div id ="tableContainer">
-
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Date Due</th>
-            <th>Progress</th>
-            <th></th>
-        </tr>
-        {% for todo in todos %}
-        <tr>
-            <td>
-                <a href = "{{url_for('show', id=todo.todo_id)}}">{{ todo.title }}</a>
-            </td>
-            <td>
-                {{ todo.date_due }}
-            </td>
-            
+        <table>
+            <tr>
+                <th>Task</th>
+                <th>Date Due</th>
+                <th>Progress</th>
+                <th></th>
+            </tr>
+            {% for todo in todos %}
+            <tr>
                 <td>
-                    {% if todo.complete == true %}
-                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
-                            <img src ="{{url_for('static', filename = 'images/complete.png')}}">
-                        </a>
-                    {% elif todo.complete == false and todo.in_progress == false  %}
-                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
-                            <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
-                        </a>    
-                    {% elif todo.complete == false and todo.in_progress == true  %}
-                        <a href = "{{url_for('progress', id=todo.todo_id)}}">
-                            <img src ="{{url_for('static', filename = 'images/in_progress.png')}}">
-                        </a>    
-                    {% endif %}
+                    <a href = "{{url_for('show', id=todo.todo_id)}}">{{ todo.title }}</a>
                 </td>
-            </a>
-            <td>
-                <a href="{{url_for('update', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/edit.png')}}"></div></a>
-            </td>
-            <td>
-                <a href="{{url_for('delete', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/delete.png')}}"></div></a>
-            </td>
-            <td id = "complete">
-                <a href="{{url_for('complete', id=todo.todo_id)}}">
-                    {% if todo.complete == true %}
-                    <span>Mark as incomplete</span>
-                    {% elif todo.complete == false %}
-                    <span>Mark as complete</span>
-                    {% endif %}
+                <td>
+                    {{ todo.date_due }}
+                </td>
+                
+                    <td>
+                        {% if todo.complete == true %}
+                            <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                                <img src ="{{url_for('static', filename = 'images/complete.png')}}">
+                            </a>
+                        {% elif todo.complete == false and todo.in_progress == false  %}
+                            <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                                <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
+                            </a>    
+                        {% elif todo.complete == false and todo.in_progress == true  %}
+                            <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                                <img src ="{{url_for('static', filename = 'images/in_progress.png')}}">
+                            </a>    
+                        {% endif %}
+                    </td>
                 </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
+                <td>
+                    <a href="{{url_for('update', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/edit.png')}}"></div></a>
+                </td>
+                <td>
+                    <a href="{{url_for('delete', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/delete.png')}}"></div></a>
+                </td>
+                <td id = "complete">
+                    <a href="{{url_for('complete', id=todo.todo_id)}}">
+                        {% if todo.complete == true %}
+                        <span>Mark as incomplete</span>
+                        {% elif todo.complete == false %}
+                        <span>Mark as complete</span>
+                        {% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </div>
 <!-- <div>
     <ul>

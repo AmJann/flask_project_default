@@ -1,10 +1,10 @@
 body{
     font-family: 'Kanit', sans-serif;
     text-align: center;
-    background-image: url('/static/images/laptop.jpeg');
+    /* background-image: url('/static/images/laptop.jpeg');
     background-size: cover;
     background-repeat: no-repeat;
-    background-color: rgb(109, 168, 205);
+    background-color: rgb(109, 168, 205); */
 
 }
 
@@ -95,8 +95,10 @@ td{
 
 #header{
   margin-top: 2em;
-  background-color:rgba(215, 212, 212, 0.8);
+  /* background-color:rgba(215, 212, 212, 0.8); */
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  padding:.5em;
+  border-radius: 7px;
 }
 
 .typewriter{
@@ -113,11 +115,22 @@ button{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.submit{
+/* .submit{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
+} */
 
 .nav{
     text-align: right;
     color:white;
 }
+
+input{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+}
+
+textarea{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+
+

@@ -11,9 +11,17 @@
 
 
 {% if username %}
-<h2> Welcome {{username}}!</h2>
+<h2>username: {{username}}</h2>
+<h2>password: {{password}}</h2>
+i found this
+username: {{pw_to_check.username}}
+PW: {{pw_to_check.password_hash}}
+<br>
+Passed: {{ passed }}
+
+
 {% else %}
-<h1>Create Login</h1>
+<h1>What's your Username and Password?</h1>
 <br>
 <form method="POST">
     {{form.hidden_tag()}}
@@ -25,19 +33,13 @@
     <br>
     {{form.password_hash()}}
     <br><br>
-    {{form.password_hash2.label}}
-    <br>
-    {{form.password_hash2()}}
-    <br><br>
     {{form.submit()}}
+
 
 </form>
 
 
 
 {% endif %}
-<br><br><br>
-{% for our_user in our_users %}
-   {{our_user.id}} - {{our_user.username}}<br>
-{% endfor %}
+
 {% endblock %}
