@@ -13,3 +13,18 @@ const closeModal = () => {
 
 close.addEventListener("click", closeModal);
 
+
+const modal2 = document.getElementById("modal2");
+const close2 = document.getElementById("close2");
+
+const openModal2 = () => {
+  modal2.style.display = "block";
+};
+openBtn.addEventListener("click", openModal2);
+
+const closeModal2 = () => {
+  modal2.style.display = "none";
+};
+
+close2.addEventListener("click", closeModal2);
+

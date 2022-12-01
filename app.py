@@ -74,19 +74,6 @@ def update(id):
     else:
         return render_template('update.html', todo=todo)          
   
-@app.route("/updated/<int:id>/", methods=['POST', 'GET'])  
-def updated(id): 
-    todo = ToDo.query.get_or_404(id)
-    todo.title = request.form['title']
-    todo.description = request.form['description']
-    datetime_str = request.form['date']
-    datetime_obj = datetime.strptime(datetime_str,
-    "%Y-%m-%d")
-    date = datetime_obj.date()
-    todo.date_due = date
-
-    db.session.commit()
-    return redirect('/') 
 
 @app.route('/delete/<int:id>')
 @login_required 
@@ -113,7 +100,17 @@ def updateUser(id):
     else:
         return render_template('updateUser.html', user=user)   
 
+@app.route('/deleteUser/<int:id>')
+@login_required 
+def deleteUser(id):
+    user_delete = User.query.get_or_404(id)
 
+    try:
+        db.session.delete(user_delete)
+        db.session.commit()
+        return redirect(url_for('index'))
+    except:
+        return'issue deleting user'
     
 
 @app.route("/progress/<int:id>/", methods=['GET'])

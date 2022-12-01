@@ -38,6 +38,32 @@ body{
 
 }
 
+#modal2{
+	background-color: rgba(0, 0, 0, .4);
+    display:none;
+	position:fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	z-index: 2;
+	overflow:auto;
+    
+
+}
+#modal-textbox2{
+	background-color:rgb(176, 196, 196);
+	height:200px;
+	width: 300px;
+	border-radius: 10px;
+	margin: 150px auto;
+    padding: 10px;
+    border:2px solid black ;
+	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    text-align:center;
+
+}
+
 .icon{
     height:35px;
 }
@@ -103,6 +129,11 @@ td{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   padding:.5em;
   border-radius: 7px;
+}
+
+.redText{
+    color:red;
+    font-weight: 400;
 }
 
 
