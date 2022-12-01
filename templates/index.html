@@ -2,38 +2,42 @@
 
 {% block head %}
 
-<div class ="typewriter">
-    <h1 id="header">To-Do List</h1>
-</div>
 
 {% endblock %}
 
 {% block body %}
+
 <div id="contentContainer">
     <div>
-        <div class = "textBackground">Add a new To-do item:
-            <button class = 'btn btn-outline-dark' id="openModal">Add Task</button>
+        <br>
+        <div class = "textBackground">
+            <button class = 'btn btn-outline-secondary' id="openModal">Add Task</button>
         </div>
-
+        <br>
         <div id="modal">
             <div id="modal-textbox">
                 <a href="#" id="close" class = "btn-close"></a>
-
+                {% if current_user.is_authenticated %}
                 <form action="/add" method="POST">
-                    <label for="title">Task Title:</label>
+                    <h3>Add Task</h3>
+                    <label for="title">Task Title:</label><br>
                     <input type="text" name="title" placeholder = "Task Title">
                     <br>
-                    <label for="date">Date Due:</label>
+                    <label for="date">Date Due:</label><br>
                     <input type="date" name="date">
                     <br><br>
                     <textarea type="text" name ="description"placeholder ="Description" rows ="10" columns ="40"></textarea>
                     <br>
-                    <input class = "btn btn-outline-dark"type="submit" id ="close">
+                    <input class = "btn btn-outline-dark"type="submit" class = 'submitCenter'>
                 </form>
+                {% else %}
+                <h4>Must be Logged in to Edit Task</h4>
+                <a class = 'btn btn-outline-dark' href="{{url_for('login')}}">Login</a>
+                {% endif %}
             </div>
         </div>
 
-        <div class="dropdown">
+        <!-- <div class="dropdown">
             <form action="/filter_complete/" method="GET">
                 <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete') }}">incomplete first</option>
@@ -41,7 +45,19 @@
                 </select>
                 <input class ="btn btn-outline-dark submit"type = "submit">
             </form>    
-        </div>
+        </div> -->
+        <div class=".dropdown-center">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Filter Tasks
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+              <li><a class="dropdown-item active" href="{{ url_for('filter_complete') }}">incomplete first</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="#">Separated link</a></li>
+            </ul>
+          </div>
     </div>
     <div id ="tableContainer">
 
@@ -50,7 +66,9 @@
                 <th>Task</th>
                 <th>Date Due</th>
                 <th>Progress</th>
-                <th></th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Complete</th>
             </tr>
             {% for todo in todos %}
             <tr>

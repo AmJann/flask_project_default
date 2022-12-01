@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+{% if current_user.is_authenticated %}
+<h2>Update User Info</h2><br>
+    <form action="/updateUser/{{user.id}}/" method="POST" >
+        <label name="username">Username:</label><br>
+        <input type="text" name="username" placeholder = "username" value="{{user.username}}" maxlength="50" size="24"><br><br>
+        <br>
+        <input class = 'btn btn-outline-dark' type="submit" value = "update">
+    
+{% else %}
+<h4>Must be Logged in to Edit Info</h4>
+<a class = 'btn btn-outline-dark' href="{{url_for('login')}}">Login</a>
+{% endif %}
+    <a class = 'btn btn-outline-dark' href ='/'>Back</a>
+</form>
+{% endblock %}

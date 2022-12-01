@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-
+{% if current_user.is_authenticated %}
     <form action="/update/{{todo.todo_id}}/" method="POST" >
         <input type="text" name="title" id="title" placeholder = "Task Title" value="{{todo.title}}" maxlength="50" size="24">
         <input type="date" name="date" id="date" value="{{todo.date_due}}"><br><br>
@@ -12,7 +12,10 @@
         <br>
         <input type="submit" value = "update">
     </form>
-
-    <a href ='/'>Back</a>
+{% else %}
+<h4>Must be Logged in to Edit Task</h4>
+<a class = 'btn btn-outline-dark' href="{{url_for('login')}}">Login</a>
+{% endif %}
+    <a class = 'btn btn-outline-dark' href ='/'>Back</a>
 
 {% endblock %}

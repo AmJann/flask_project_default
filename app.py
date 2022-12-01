@@ -89,6 +89,7 @@ def updated(id):
     return redirect('/') 
 
 @app.route('/delete/<int:id>')
+@login_required 
 def delete(id):
     task_delete = ToDo.query.get_or_404(id)
 
@@ -99,18 +100,32 @@ def delete(id):
     except:
         return'issue deleting the task'
 
-@app.route('/user/<username>') 
-def user(username):
-    return "<h1>Hello {username}</h1>".format(username)     
+@app.route("/updateUser/<int:id>/",methods=['POST','GET'])  
+def updateUser(id): 
+    user = User.query.get_or_404(id)
+    if request.method == "POST":
+        user.username = request.form['username']
+        try:
+            db.session.commit()
+            return redirect(url_for('dashboard'))
+        except:
+            return "There was a problem updating your task."  
+    else:
+        return render_template('updateUser.html', user=user)   
 
-@app.route("/progress/<int:id>/", methods=['GET'])    
+
+    
+
+@app.route("/progress/<int:id>/", methods=['GET'])
+@login_required    
 def progress(id):
     todo = ToDo.query.filter_by(todo_id = id).first()
     todo.in_progress = not todo.in_progress
     db.session.commit()
     return redirect(url_for('index'))
 
-@app.route("/complete/<int:id>/", methods=['GET'])    
+@app.route("/complete/<int:id>/", methods=['GET'])
+@login_required    
 def complete(id):
     todo = ToDo.query.filter_by(todo_id = id).first()
     todo.in_progress = True
@@ -153,7 +168,6 @@ def registration():
             form.username.data = ''
             form.password_hash.data = ''
             flash("Sign-up Successful")
-         
     our_users = User.query.all()
     return render_template('registration.html',
     username=username,
@@ -169,7 +183,9 @@ class PasswordForm(FlaskForm):
 class LoginForm(FlaskForm):
     username =StringField("Username",validators=[DataRequired()])
     password =PasswordField("Password",validators=[DataRequired()])
-    submit =SubmitField("Submit")  
+    submit =SubmitField("Submit")
+
+
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():

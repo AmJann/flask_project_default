@@ -5,9 +5,13 @@ body{
     background-size: cover;
     background-repeat: no-repeat;
     background-color: rgb(109, 168, 205); */
+    background-color:rgb(225, 228, 228)
 
 }
 
+/* .nav-link{
+    color:whitesmoke;
+} */
 #modal{
 	background-color: rgba(0, 0, 0, .4);
     display:none;
@@ -22,15 +26,15 @@ body{
 
 }
 #modal-textbox{
-	background-color: yellow;
-	height:450px;
-	width: 550px;
+	background-color:rgb(176, 196, 196);
+	height:515px;
+	width: 350px;
 	border-radius: 10px;
 	margin: 150px auto;
     padding: 10px;
-    border:5px solid black ;
+    border:2px solid black ;
 	box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-    font-family: 'Source Code Pro', monospace;
+    text-align:center;
 
 }
 
@@ -101,28 +105,26 @@ td{
   border-radius: 7px;
 }
 
-.typewriter{
-    /* width:28vw; */
+
+/* .typewriter{
+    width:28vw;
     display:flex;
     justify-content: center;
-}
+} */
 
 button{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.dropdown-menu{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-/* .submit{
+/* .dropdown-menu{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 } */
 
-.nav{
-    text-align: right;
-    color:white;
+.submit{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
+
 
 input{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
@@ -132,5 +134,26 @@ textarea{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.dashboardImg{
+    height:10vh;
+}
+#close{
+    display:flex;
+    justify-self: flex-start;
+}
 
+.submitCenter{
+    display:flex;
+    justify-self: center;
+}
+
+.card-body{
+    text-align: left;
+    display:inline-block;
+}
+
+.card-header{
+    text-align: left;
+    display:inline-block;   
+}
 
