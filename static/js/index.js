@@ -28,3 +28,22 @@ const closeModal2 = () => {
 
 close2.addEventListener("click", closeModal2);
 
+$(document).ready(function(e){
+  var clicked;
+  e.preventDefault()
+  $(".complete").click(function(){
+  clicked = $(this).attr("#complete");
+  $.ajax({
+    type : 'GET',
+    url : "{{url_for('complete')}}",
+    contentType: 'application/json;charset=UTF-8',
+    data : {'data':clicked}
+  });
+   });
+
+  });
+
+   
+
+
+

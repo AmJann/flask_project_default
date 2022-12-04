@@ -188,3 +188,10 @@ textarea{
     display:inline-block;   
 }
 
+.alert{
+    display:none;
+}
+
+table{
+    min-width:350px;
+}

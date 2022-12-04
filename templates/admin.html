@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<h2>Admin</h2>
+<div id="tableContainer">
+<table class="table table-striped">
+
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Date/Time Added</th>
+      </tr>
+
+    {% for user in users %}
+
+      <tr>
+        <td>{{user.id}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.date_added}}</td>
+      </tr>
+
+    {% endfor %}
+  </table>
+</div> 
+{% endblock %}

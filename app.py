@@ -1,13 +1,14 @@
-from flask import Flask, redirect, url_for, render_template, request, flash, session
+from flask import Flask, redirect, url_for, render_template, request, flash, session, jsonify
 from models import db, User, ToDo
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
+from wtforms import StringField, SubmitField, PasswordField, BooleanField,DateField ,ValidationError
 from wtforms.validators import DataRequired, EqualTo, Length
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from wtforms.widgets import TextArea
 
 
 # Flask
@@ -33,22 +34,40 @@ def load_user(user_id):
 
 @app.route("/", methods=['POST', 'GET'])
 def index():
-    '''
-    Home page
-    '''
-    todos = ToDo.query.all()
-    return render_template('index.html',todos=todos)
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        todos = ToDo.query.filter_by(user_id=id).all()
+        return render_template('index.html',todos=todos, form=form)     
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form)        
 
-@app.route("/add", methods=['POST','GET'])
+class AddForm(FlaskForm):
+    title=StringField("title",validators=[DataRequired()])
+    date_due=DateField("date_due",validators=[DataRequired()])
+    description=StringField("description",validators=[DataRequired()], widget=TextArea())
+    submit=SubmitField("Submit") 
+
+@app.route("/add/", methods=['POST','GET'])
 def add():
-    datetime_str = request.form['date']
-    datetime_obj = datetime.strptime(datetime_str,
-    "%Y-%m-%d")
-    date = datetime_obj.date()
-    todo = ToDo(title=request.form['title'], complete=False, date_due =date, description=request.form['description'], in_progress=False )
-    db.session.add(todo)
-    db.session.commit()
-    return redirect(url_for('index'))
+    form = AddForm()
+
+    if form.validate_on_submit():
+        poster = current_user.id
+        # ToDo(date_due = request.form.data)
+        # datetime_obj = datetime.strptime(date_due,
+        # "%Y-%m-%d")
+        # date = datetime_obj.date()
+        todo = ToDo(title=form.title.data,date_due =form.date_due.data, user_id=poster, description=form.description.data,)
+  
+        form.title.data = ''
+        form.date_due.data = ''
+        form.description.data = ''
+        db.session.add(todo)
+        db.session.commit()
+        flash("Task Added successfully")
+    return redirect(url_for('index', form=form))
 
 @app.route("/show/<int:id>/", methods=['GET'])
 def show(id):
@@ -103,9 +122,12 @@ def updateUser(id):
 @app.route('/deleteUser/<int:id>')
 @login_required 
 def deleteUser(id):
+    deleted=None
     user_delete = User.query.get_or_404(id)
 
     try:
+        deleted =request.json['data']
+        print(deleted)
         db.session.delete(user_delete)
         db.session.commit()
         return redirect(url_for('index'))
@@ -113,31 +135,46 @@ def deleteUser(id):
         return'issue deleting user'
     
 
-@app.route("/progress/<int:id>/", methods=['GET'])
+@app.route("/progress/<int:id>/", methods=['GET','POST'])
 @login_required    
 def progress(id):
     todo = ToDo.query.filter_by(todo_id = id).first()
     todo.in_progress = not todo.in_progress
     db.session.commit()
-    return redirect(url_for('index'))
+    return redirect(url_for('index'))  
 
-@app.route("/complete/<int:id>/", methods=['GET'])
+@app.route("/complete/<int:id>/", methods=['GET', 'POST'])
 @login_required    
 def complete(id):
-    todo = ToDo.query.filter_by(todo_id = id).first()
-    todo.in_progress = True
-    todo.complete = not todo.complete
+    clicked=None
+    todos = ToDo.query.filter_by(todo_id = id).first()
+    clicked = request.data
+    todos.complete = not todos.complete
     db.session.commit()
     return redirect(url_for('index'))
 
 
-@app.route('/filter_complete/', methods=['GET']) 
+@app.route('/filter_incomplete/', methods=['GET', 'POST']) 
+def filter_incomplete():
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.complete.asc()).order_by(ToDo.in_progress.asc()).all() 
+        return render_template('index.html', todos=todos,form=form)    
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form)  
+
+@app.route('/filter_complete/', methods=['GET', 'POST'])
 def filter_complete():
-    todos = ToDo.query.order_by(ToDo.complete.asc()).order_by(ToDo.in_progress.asc()).all() 
-    # filter_rule = request.args.get('filter') 
-    # if key == 'A-Z':
-    #     todos = ToDo.query.order_by(ToDo.complete.desc()).all()
-    return render_template('index.html', todos=todos)  
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.complete.desc()).order_by(ToDo.in_progress.desc()).all() 
+        return render_template('index.html', todos=todos,form=form)    
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form)  
 
 class RegistrationForm(FlaskForm):
     username=StringField("Username",validators=[DataRequired()])
@@ -181,7 +218,6 @@ class LoginForm(FlaskForm):
     username =StringField("Username",validators=[DataRequired()])
     password =PasswordField("Password",validators=[DataRequired()])
     submit =SubmitField("Submit")
-
 
 
 @app.route('/login/', methods=['GET', 'POST'])
@@ -240,6 +276,11 @@ def test_pw():
         form = form
         )
 
+@app.route('/admin/')
+@login_required
+def admin():
+    users = User.query.all()
+    return render_template('admin.html', users=users)
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -249,7 +290,10 @@ def page_not_found(e):
 def page_not_found(e):
     return render_template('500.html'), 500 
 
+   
 
+    
+    
     
 
 if __name__ == "__main__":

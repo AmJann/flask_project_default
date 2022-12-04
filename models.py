@@ -40,9 +40,9 @@ class User(db.Model, UserMixin):
 class ToDo(db.Model):
     __tablename__ = 'todos'
     todo_id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50))
-    description = db.Column(db.Text(500))
-    date_due = db.Column(db.Date())
+    title = db.Column(db.String(50), default='No Title')
+    description = db.Column(db.Text(500), default='No Description')
+    date_due = db.Column(db.Date(), default=datetime.utcnow())
     in_progress = db.Column(db.Boolean, default=False)
     complete = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
@@ -50,6 +50,6 @@ class ToDo(db.Model):
 
 
     def __repr__(self):
-        return f'<ToDo "{self.text[:20]}...">'
+        return f'<ToDo "{self.description[:20]}...">'
 
 
