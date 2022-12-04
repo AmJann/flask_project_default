@@ -4,7 +4,12 @@
 
 
 {% endblock %}
-
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
 {% block body %}
 
 <div id="contentContainer">
@@ -19,7 +24,7 @@
                 {% if current_user.is_authenticated %}
                 <form action="/add/" method="POST">
                     {{form.hidden_tag()}}
-                    
+                    <h3>Add Task</h3>
                     {{form.title.label}}
                     <br>
                     {{form.title()}}
@@ -37,20 +42,11 @@
                 </form>
                 {% else %}
                 <h4>Must be Logged in to Edit Task</h4>
-                <a class = 'btn btn-secondary' href="">Login</a>
+                <a class = 'btn btn-secondary' href="{{url_for('login')}}">Login</a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- <div class="dropdown">
-            <form action="/filter_complete/" method="GET">
-                <select class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <option class="dropdown-item" value="incomplete first" href="{{ url_for('filter_complete') }}">incomplete first</option>
-                <option class="dropdown-item" value="complete first" href="{{ url_for('filter_complete') }}">complete first</option>
-                </select>
-                <input class ="btn btn-outline-dark submit"type = "submit">
-            </form>    
-        </div> -->
         <div class=".dropdown-center">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
               Filter Tasks

@@ -3,7 +3,7 @@
 {% block body %}
 {% for message in get_flashed_messages() %}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
-  {{message}}
+
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
 {% endfor %}
@@ -16,6 +16,14 @@
 <h1>Create Login</h1>
 <br>
 <form method="POST">
+  {% for error in form.username.errors %}
+  <span class="redText">{{error}}</span>
+  {% endfor %}
+  <br>
+  {% for error in form.password_hash.errors %}
+  <span class="redText">{{error}}</span>
+  {% endfor %}  
+  <br> 
     {{form.hidden_tag()}}
     {{form.username.label}}
     <br>
@@ -36,8 +44,5 @@
 
 
 {% endif %}
-<br><br><br>
-{% for our_user in our_users %}
-   {{our_user.id}} - {{our_user.username}}<br>
-{% endfor %}
+
 {% endblock %}

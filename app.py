@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField,DateField ,ValidationError
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms.validators import DataRequired, EqualTo, Length, ValidationError
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from wtforms.widgets import TextArea
@@ -122,17 +122,26 @@ def updateUser(id):
 @app.route('/deleteUser/<int:id>')
 @login_required 
 def deleteUser(id):
-    deleted=None
     user_delete = User.query.get_or_404(id)
 
     try:
-        deleted =request.json['data']
-        print(deleted)
         db.session.delete(user_delete)
         db.session.commit()
         return redirect(url_for('index'))
     except:
         return'issue deleting user'
+
+@app.route('/admin/deleteUser/<int:id>')
+@login_required 
+def adminDeleteUser(id):
+    user_delete = User.query.get_or_404(id)
+
+    try:
+        db.session.delete(user_delete)
+        db.session.commit()
+        return redirect(url_for('admin'))
+    except:
+        return'issue deleting user'        
     
 
 @app.route("/progress/<int:id>/", methods=['GET','POST'])
@@ -177,10 +186,15 @@ def filter_complete():
         return render_template('index.html',form=form)  
 
 class RegistrationForm(FlaskForm):
-    username=StringField("Username",validators=[DataRequired()])
-    password_hash=PasswordField("Password",validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match!')])
-    password_hash2=PasswordField("Confirm Password",validators=[DataRequired()])
+    username=StringField("Username",validators=[DataRequired(),Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
+    password_hash=PasswordField("Password",validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match'), Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
+    password_hash2=PasswordField("Confirm Password",validators=[DataRequired(), Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
     submit=SubmitField("Submit")
+
+    def validate_username(self,username):
+        user_object = User.query.filter_by(username=username.data).first()
+        if user_object:
+            raise ValidationError("Username already exists")
 
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
@@ -202,6 +216,10 @@ def registration():
             form.username.data = ''
             form.password_hash.data = ''
             flash("Sign-up Successful")
+        else:
+            flash('user already exists')
+            redirect(url_for('registration'))
+      
     our_users = User.query.all()
     return render_template('registration.html',
     username=username,
@@ -279,8 +297,13 @@ def test_pw():
 @app.route('/admin/')
 @login_required
 def admin():
-    users = User.query.all()
-    return render_template('admin.html', users=users)
+    username = current_user.username
+    if username == 'Admin':
+        users = User.query.all()
+        return render_template('admin.html', users=users)
+    else:
+        flash("Sorry only Admin can access this Page") 
+        return redirect(url_for('index'))   
 
 @app.errorhandler(404)
 def page_not_found(e):
