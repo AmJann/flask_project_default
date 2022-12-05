@@ -17,22 +17,23 @@
 <p><strong>Username:</strong> {{current_user.username}}</p>
 <p><strong>User Id:</strong> {{current_user.id}}</h4><p>
 <p><strong>Date Joined:</strong> {{current_user.date_added}}</p>
-      <a href="{{url_for('index')}}" class="btn btn-dark">Home</a>
-      <a href="{{url_for('logout')}}" class="btn btn-dark">Logout</a>
-<a href="{{url_for('updateUser', id = current_user.id)}}" class="btn btn-dark">Edit Profile</a>
+      <a href="{{url_for('index')}}" class="shadow btn btn-secondary">Home</a>
+      <a href="{{url_for('logout')}}" class="shadow btn btn-secondary">Logout</a>
+<a href="{{url_for('updateUser', id = current_user.id)}}" class="shadow btn btn-secondary">Edit Profile</a>
+<!-- delete modal -->
 <button class = 'btn btn-outline-danger' id="openModal">Delete User</button>
 <div id="contentContainer">
     <div>
         <div class = "textBackground">  
         </div>
         <br>
-        <div id="modal2">
+        <div id="modal">
             <div id="modal-textbox2">
-                <a href="#" id="close2" class = "btn-close"></a>
+                <a href="#" id="close" class = "btn-close closeX"></a>
                 <h5>Are you sure you want to delete the profile with the username <span class="redText">{{current_user.username}}</span>?</h5>
                 <br>
                 <a href="{{url_for('deleteUser', id=current_user.id)}}" class="btn btn-secondary"id="btn-delete">Yes</a>
-                <a href="#" class="btn btn-danger" id="close2">Cancel</a>
+                <a href="#" class="btn btn-danger deleteModal" id="close">Cancel</a>
             </div>
         </div>
     </div>

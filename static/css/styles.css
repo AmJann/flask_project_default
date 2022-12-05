@@ -83,7 +83,7 @@ a{
 
 a:hover{
     transform: scale(1.3);
-  color:rgb(59, 57, 57);
+  color:rgb(91, 88, 88);
 }
 
 table{
@@ -166,10 +166,15 @@ textarea{
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
+.shadow{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
 .dashboardImg{
     height:10vh;
 }
-#close{
+
+.closeX{
     display:flex;
     justify-self: flex-start;
 }
@@ -197,4 +202,25 @@ textarea{
     display:flex;
     justify-self:center;
     width:35vw;
+}
+
+.loginSignupContainers{
+    background-color:#c9cbcb;
+    width:30vw;
+    align-self: center;
+    padding:.5em .5em 1em .5em;
+    border:1px solid rgb(110, 108, 108);
+    border-radius: 7px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.centerContainer{
+    display:flex;
+    justify-content: center;
+}
+
+.deleteModal{
+  display: inline-flex;
+  justify-content: center;
+    
 }

@@ -3,13 +3,9 @@ from models import db, User, ToDo
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField,DateField ,ValidationError
-from wtforms.validators import DataRequired, EqualTo, Length, ValidationError
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from wtforms.widgets import TextArea
-
+from forms import AddForm, LoginForm, PasswordForm, RegistrationForm
 
 # Flask
 app = Flask(__name__)
@@ -42,12 +38,6 @@ def index():
     else:
         flash('Must be logged in to view your to-do list')
         return render_template('index.html',form=form)        
-
-class AddForm(FlaskForm):
-    title=StringField("title",validators=[DataRequired()])
-    date_due=DateField("date_due",validators=[DataRequired()])
-    description=StringField("description",validators=[DataRequired()], widget=TextArea())
-    submit=SubmitField("Submit") 
 
 @app.route("/add/", methods=['POST','GET'])
 def add():
@@ -155,9 +145,7 @@ def progress(id):
 @app.route("/complete/<int:id>/", methods=['GET', 'POST'])
 @login_required    
 def complete(id):
-    clicked=None
     todos = ToDo.query.filter_by(todo_id = id).first()
-    clicked = request.data
     todos.complete = not todos.complete
     db.session.commit()
     return redirect(url_for('index'))
@@ -184,17 +172,6 @@ def filter_complete():
     else:
         flash('Must be logged in to view your to-do list')
         return render_template('index.html',form=form)  
-
-class RegistrationForm(FlaskForm):
-    username=StringField("Username",validators=[DataRequired(),Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
-    password_hash=PasswordField("Password",validators=[DataRequired(), EqualTo('password_hash2', message='Passwords Must Match'), Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
-    password_hash2=PasswordField("Confirm Password",validators=[DataRequired(), Length(min=4,max=25,message="Username must be between 4 and 25 characters")])
-    submit=SubmitField("Submit")
-
-    def validate_username(self,username):
-        user_object = User.query.filter_by(username=username.data).first()
-        if user_object:
-            raise ValidationError("Username already exists")
 
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
@@ -227,16 +204,6 @@ def registration():
     form=form,
     our_users=our_users
     )   
-class PasswordForm(FlaskForm):
-    username=StringField("Username",validators=[DataRequired()])
-    password_hash=PasswordField("Password",validators=[DataRequired()])
-    submit=SubmitField("Submit")
-
-class LoginForm(FlaskForm):
-    username =StringField("Username",validators=[DataRequired()])
-    password =PasswordField("Password",validators=[DataRequired()])
-    submit =SubmitField("Submit")
-
 
 @app.route('/login/', methods=['GET', 'POST'])
 def login():

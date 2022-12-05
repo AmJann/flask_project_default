@@ -13,8 +13,9 @@
 {% if username %}
 <h2> Welcome {{username}}!</h2>
 {% else %}
+<div class="centerContainer">
+<div class="loginSignupContainers">
 <h1>Create Login</h1>
-<br>
 <form method="POST">
   {% for error in form.username.errors %}
   <span class="redText">{{error}}</span>
@@ -37,10 +38,11 @@
     <br>
     {{form.password_hash2()}}
     <br><br>
-    {{form.submit()}}
+    {{form.submit(class='submit btn btn-secondary')}}
 
 </form>
-
+</div>
+</div>
 
 
 {% endif %}

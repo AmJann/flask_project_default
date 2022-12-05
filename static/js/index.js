@@ -13,35 +13,43 @@ const closeModal = () => {
 
 close.addEventListener("click", closeModal);
 
+// const openBtn2 = document.getElementById("openModal");
+// const modal2 = document.getElementById("modal2");
+// const close2 = document.getElementById("close2");
 
-const modal2 = document.getElementById("modal2");
-const close2 = document.getElementById("close2");
+// const openModal2 = () => {
+//   modal2.style.display = "block";
+// };
+// openBtn2.addEventListener("click", openModal);
 
-const openModal2 = () => {
-  modal2.style.display = "block";
-};
-openBtn.addEventListener("click", openModal2);
+// const closeModal2 = () => {
+//   modal2.style.display = "none";
+// };
 
-const closeModal2 = () => {
-  modal2.style.display = "none";
-};
+// close2.addEventListener("click", closeModal2);
 
-close2.addEventListener("click", closeModal2);
+// $(document).ready(function(e){
+//   $('.complete').on('click', function(){
+//     e.preventDefault()
+//     var complete_id = $(this).attr('todo_id');
 
-$(document).ready(function(e){
-  var clicked;
-  e.preventDefault()
-  $(".complete").click(function(){
-  clicked = $(this).attr("#complete");
-  $.ajax({
-    type : 'GET',
-    url : "{{url_for('complete')}}",
-    contentType: 'application/json;charset=UTF-8',
-    data : {'data':clicked}
-  });
-   });
+//     var complete = $('#complete'+complete_id).val();
 
-  });
+//     req = $.ajax({
+//       url:`/complete/${todo_id}/`,
+//       type:'POST',
+//       data:{complete:complete, id: complete_id}
+//     })
+
+//     req.done(function(data){
+//       $('#complete'+complete_id).text(data.complete)
+//     })
+
+//     $('#complete'+complete_id).fadeout(1000).fadein(1000);
+
+//   });
+// });
+
 
    
 

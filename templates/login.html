@@ -9,8 +9,8 @@
 {% endfor %}
 <br><br>
 
-
-
+<div class="centerContainer">
+<div class="loginSignupContainers">
 <h1>Login</h1>
 
 <br>
@@ -24,10 +24,12 @@
     <br>
     {{form.password()}}
     <br><br>
-    {{form.submit()}}
-
+    {{form.submit(class='submit btn btn-secondary')}}
+    <br><br>
+<p><span>Don't have an account?</span><a class="nav-link" href="{{url_for('registration')}}">Sign-up</a></p>
 </form>
-
+</div>
+</div>
 
 
 

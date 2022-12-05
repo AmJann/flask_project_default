@@ -20,7 +20,7 @@
         <br>
         <div id="modal">
             <div id="modal-textbox">
-                <a href="#" id="close" class = "btn-close"></a>
+                <a href="#" id="close" class = "btn-close closeX"></a>
                 {% if current_user.is_authenticated %}
                 <form action="/add/" method="POST">
                     {{form.hidden_tag()}}
@@ -63,7 +63,7 @@
     </div>
     <div id ="tableContainer">
 
-        <table>
+        <table id="todoTable">
             {% if todos %}
             <tr>
                 <th>Task</th>
@@ -104,7 +104,7 @@
                 <td>
                     <a id='delete' href="{{url_for('delete', id=todo.todo_id)}}"><div class = 'icon'><img src ="{{url_for('static', filename = 'images/delete.png')}}"></div></a>
                 </td>
-                <td name ="complete"id = "complete">
+                <td name ="complete" todo_id='{{todo.todo_id}}'id = "complete{{todo.todo_id}}">
                     <a href="{{url_for('complete', id=todo.todo_id)}}">
                         {% if todo.complete == true %}
                         <span>Mark as incomplete</span>
