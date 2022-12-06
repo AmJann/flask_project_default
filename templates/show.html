@@ -2,6 +2,18 @@
 {% block head %}
 {% endblock %}
 {% block body %}
-<h2>{{todo.title}}</h2>
-<p>{{todo.description}}</p>
+<div class="centerContainer">
+<div id ="showContainer"class="card text-center">
+    <div class="card-header">
+        <h2>{{todo.title}}</h2>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">Task Info</h5>
+      <p class="card-tex(t">{{todo.description}}</p>
+      <a href="{{url_for('index')}}" class="btn btn-primary">Back</a>
+    </div>
+  </div>
+</div>
+<h2></h2>
+<p></p>
 {% endblock %}

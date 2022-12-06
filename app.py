@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from forms import AddForm, LoginForm, PasswordForm, RegistrationForm
 
+
 # Flask
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
@@ -22,6 +23,7 @@ db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -45,10 +47,6 @@ def add():
 
     if form.validate_on_submit():
         poster = current_user.id
-        # ToDo(date_due = request.form.data)
-        # datetime_obj = datetime.strptime(date_due,
-        # "%Y-%m-%d")
-        # date = datetime_obj.date()
         todo = ToDo(title=form.title.data,date_due =form.date_due.data, user_id=poster, description=form.description.data,)
   
         form.title.data = ''
@@ -150,13 +148,15 @@ def complete(id):
     db.session.commit()
     return redirect(url_for('index'))
 
-
 @app.route('/filter_incomplete/', methods=['GET', 'POST']) 
 def filter_incomplete():
     form = AddForm()
+    poster = current_user
     if current_user.is_authenticated:
         id = current_user.id
-        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.complete.asc()).order_by(ToDo.in_progress.asc()).all() 
+        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.complete.asc()).order_by(ToDo.in_progress.asc()).all()   
+        
+        db.session.commit()
         return render_template('index.html', todos=todos,form=form)    
     else:
         flash('Must be logged in to view your to-do list')
@@ -168,10 +168,37 @@ def filter_complete():
     if current_user.is_authenticated:
         id = current_user.id
         todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.complete.desc()).order_by(ToDo.in_progress.desc()).all() 
-        return render_template('index.html', todos=todos,form=form)    
+        db.session.commit() 
+        return render_template('index.html', todos=todos,form=form)   
     else:
         flash('Must be logged in to view your to-do list')
         return render_template('index.html',form=form)  
+
+@app.route('/filter_date/', methods=['GET', 'POST'])
+def filter_date():
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        date_due = ToDo.query.get('date_due')
+        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.date_due.asc()).all() 
+        db.session.commit() 
+        return render_template('index.html', todos=todos,form=form)   
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form) 
+
+@app.route('/filter_date2/', methods=['GET', 'POST'])
+def filter_date2():
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        date_due = ToDo.query.get('date_due')
+        todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.date_due.desc()).all() 
+        db.session.commit() 
+        return render_template('index.html', todos=todos,form=form)   
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form)         
 
 @app.route('/registration/', methods=['GET', 'POST'])
 def registration():
@@ -224,7 +251,7 @@ def login():
 
 	return render_template('login.html', form=form) 
 
-@app.route('/logout', methods=['GET', 'POST'])
+@app.route('/logout/', methods=['GET', 'POST'])
 @login_required
 def logout():
     logout_user()
@@ -235,31 +262,6 @@ def logout():
 @login_required
 def dashboard():
     return render_template('dashboard.html')       
-
-@app.route('/test_pw/', methods=['GET','POST'])
-def test_pw():
-    username = None
-    password = None
-    pw_to_check = None
-    passed = None
-    form = PasswordForm()
-
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password_hash.data
-        form.username.data = ''
-        form.password_hash.data = ''
-
-        pw_to_check = User.query.filter_by(username=username).first()
-        passed =check_password_hash(pw_to_check.password_hash, password)
-
-    return render_template("test_pw.html",
-        username = username,
-        password = password,
-        pw_to_check=pw_to_check,
-        passed=passed,
-        form = form
-        )
 
 @app.route('/admin/')
 @login_required

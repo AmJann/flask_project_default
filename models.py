@@ -19,7 +19,6 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(35), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
-    authenticated = db.Column(db.Boolean, default=False)
     date_added = db.Column(db.DateTime,default=datetime.utcnow())
     todos = db.relationship('ToDo', backref='User')
     
@@ -42,7 +41,7 @@ class ToDo(db.Model):
     todo_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50), default='No Title')
     description = db.Column(db.Text(500), default='No Description')
-    date_due = db.Column(db.Date(), default=datetime.utcnow())
+    date_due = db.Column(db.Date())
     in_progress = db.Column(db.Boolean, default=False)
     complete = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))

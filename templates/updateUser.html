@@ -6,17 +6,21 @@
 
 {% block body %}
 {% if current_user.is_authenticated %}
-<h2>Update User Info</h2><br>
-    <form action="/updateUser/{{user.id}}/" method="POST" >
-        <label name="username">Username:</label><br>
-        <input type="text" name="username" placeholder = "username" value="{{user.username}}" maxlength="50" size="24"><br><br>
-        <br>
-        <input class = 'btn btn-outline-dark' type="submit" value = "update">
-    
-{% else %}
-<h4>Must be Logged in to Edit Info</h4>
-<a class = 'btn btn-outline-dark' href="{{url_for('login')}}">Login</a>
-{% endif %}
-    <a class = 'btn btn-outline-dark' href ='/'>Back</a>
-</form>
+<div id ="updateUser" class="centerContainer">
+    <div class="loginSignupContainers">
+        <h2>Update User Info</h2><br>
+            <form action="/updateUser/{{user.id}}/" method="POST" >
+                <label name="username">Username:</label><br>
+                <input type="text" name="username" placeholder = "username" value="{{user.username}}" maxlength="50" size="24"><br><br>
+                <br>
+                <input class = 'btn btn-secondary' type="submit" value = "update">
+            
+        {% else %}
+        <h4>Must be Logged in to Edit Info</h4>
+        <a class = 'btn btn-secondary' href="{{url_for('login')}}">Login</a>
+        {% endif %}
+            <a class = 'btn btn-secondary shadow' href ='/'>Back</a>
+        </form>
+    </div>
+</div>        
 {% endblock %}

@@ -54,10 +54,9 @@
             <button class = 'btn btn-outline-secondary' id="openModal">Add Task</button>
             <ul class="dropdown-menu dropdown-menu-dark">
               <li><a class="dropdown-item active" href="{{ url_for('filter_incomplete') }}">Incomplete First</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('filter_complete') }}">Completed  First</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Separated link</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('filter_complete') }}">Completed First</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('filter_date') }}">Date Due Ascending</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('filter_date2') }}">Date Due Descending</a></li>
             </ul>
           </div>
     </div>
@@ -123,11 +122,4 @@
         </table>
     </div>
 </div>
-<!-- <div>
-    <ul>
-        {% for todo in todos %}
-        <li><input type="checkbox">{{ todo.text }}<span>{{ todo.date_due}}</span><a href ="#">Mark as Complete</a></li>
-        {% endfor %}
-    </ul>
-</div>     -->
 {% endblock %}
