@@ -248,7 +248,6 @@ def login():
 		else:
 			flash("That User Doesn't Exist! Try Again...")
 
-
 	return render_template('login.html', form=form) 
 
 @app.route('/logout/', methods=['GET', 'POST'])
