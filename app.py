@@ -19,6 +19,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = redis://red-ch1hip33cv2fa4h5g33g:6379
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
 db.init_app(app)
+run:
+    gunicorn app:app
 
 # db.create_all()
 login_manager = LoginManager()
