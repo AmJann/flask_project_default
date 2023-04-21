@@ -13,12 +13,9 @@ from sqlalchemy import func
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
 app.config['DEBUG'] = True
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
 
-class Config:
-    MY_VARIABLE = os.environ.get('REDIS_ADDRESS')
-app.config['SQLALCHEMY_DATABASE_URI'] = MY_VARIABLE
+# Database
+app.config['SQLALCHEMY_DATABASE_URI'] = redis://red-ch1hip33cv2fa4h5g33g:6379
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
 db.init_app(app)
