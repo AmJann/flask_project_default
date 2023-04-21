@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block head %}
-
+{% for message in get_flashed_messages() %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{message}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
 
 {% endblock %}
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{message}}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
+
 {% block body %}
 
 <div id="contentContainer">
@@ -57,6 +57,7 @@
               <li><a class="dropdown-item" href="{{ url_for('filter_complete') }}">Completed First</a></li>
               <li><a class="dropdown-item" href="{{ url_for('filter_date') }}">Date Due Ascending</a></li>
               <li><a class="dropdown-item" href="{{ url_for('filter_date2') }}">Date Due Descending</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('filter_title') }}">Title A-Z</a></li>
             </ul>
           </div>
     </div>
@@ -91,7 +92,7 @@
                                 <img src ="{{url_for('static', filename = 'images/not_started.png')}}">
                             </a>    
                         {% elif todo.complete == false and todo.in_progress == true  %}
-                            <a href = "{{url_for('progress', id=todo.todo_id)}}">
+                            <a href = "{{url_for('complete', id=todo.todo_id)}}">
                                 <img src ="{{url_for('static', filename = 'images/in_progress.png')}}">
                             </a>    
                         {% endif %}

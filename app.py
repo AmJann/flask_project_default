@@ -6,6 +6,7 @@ import os
 from werkzeug.security import generate_password_hash,check_password_hash
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from forms import AddForm, LoginForm, PasswordForm, RegistrationForm
+from sqlalchemy import func
 
 
 # Flask
@@ -145,6 +146,7 @@ def progress(id):
 def complete(id):
     todos = ToDo.query.filter_by(todo_id = id).first()
     todos.complete = not todos.complete
+    todos.in_progress = not todos.complete
     db.session.commit()
     return redirect(url_for('index'))
 
@@ -194,6 +196,19 @@ def filter_date2():
         id = current_user.id
         date_due = ToDo.query.get('date_due')
         todos = ToDo.query.filter_by(user_id=id).order_by(ToDo.date_due.desc()).all() 
+        db.session.commit() 
+        return render_template('index.html', todos=todos,form=form)   
+    else:
+        flash('Must be logged in to view your to-do list')
+        return render_template('index.html',form=form) 
+
+@app.route('/filter_title/', methods=['GET', 'POST'])
+def filter_title():
+    form = AddForm()
+    if current_user.is_authenticated:
+        id = current_user.id
+        title = ToDo.query.get('title')
+        todos = ToDo.query.filter_by(user_id=id).order_by(func.lower(ToDo.title)).all()
         db.session.commit() 
         return render_template('index.html', todos=todos,form=form)   
     else:
